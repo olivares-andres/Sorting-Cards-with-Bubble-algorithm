@@ -1,102 +1,97 @@
-var arrCards = [];
+const arrSimbols = ['&diams;', '&hearts;', '&clubs;', '&spades;'];
+const arrColors = ['#FF2D00', '#000000'];
+const numberCard = ['A', '2', '3', '4', '5', '6', '7', '8', '9', 'J', 'Q', 'K'];
+let arrCards = [];
 
-/* funcion del boton sort */
-const bubbleSort = (arr) => {
-    console.log(arr.length);
-    let wall = arr.length - 1;
-    while (wall > 0) {
-        let index = 0;
-        while (index < wall) {
-            if (arr[index].number > arr[index + 1].number) {
-                let aux = arr[index];
-                arr[index] = arr[index + 1];
-                arr[index + 1] = aux;
-                for (let j = 0; j < arr.length; j++) {
-                    console.log(arr[j]);
-                    let cards = document.querySelector(".cards2");
-                    cards.appendChild(drawCard(arr[j].number, arr[j].symbol, arr[j].classCol));
-                    if (j == arr.length - 1) {
-                        let br = document.createElement("br");
-                        cards.appendChild(br);
-                    }
-                }
-            }
-            index++;
-        }
-        wall--;
-    }
 
-    return arr;
-};
+//contruyo la carta
+const paintCard = (set) =>{
+    
+    let rSimbol = parseInt(Math.random() * (arrSimbols.length));
+    let rNum = parseInt(Math.random() * (numberCard.length));
 
-function InputNumber() {
+    // creo la carta y partes por separado
+    const card = document.createElement('div');
+    card.id = "card" + set; 
+    card.className = "card";
+    
+    const htmlSpan = document.createElement('span');
+    htmlSpan.style.color = arrColors[rSimbol];
+    htmlSpan.innerHTML = arrSimbols[rSimbol];
 
-    let inputCard = document.getElementById("input-card").value;
-    if (inputCard == "") {
-        alert("Favor de ingresar un numero");
-    }
-    else {
-        for (var x = 1; x <= inputCard; x++) {
-            let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
-            let a = Math.floor(Math.random() * numbers.length);
-            let symbols = ["♠", "♣", "♥", "♦"];
-            let b = Math.floor(Math.random() * symbols.length);
-            if (b == 2 || b == 3) {
-                classColor = "cartaRoja";
-            } else {
-                classColor = "cartaNegra";
-            }
-            let cards = document.querySelector(".cards");
-            cards.appendChild(drawCard(numbers[a], symbols[b], classColor));
-            arrCards.push({ "number": numbers[a], "symbol": symbols[b], "classCol": classColor });
-        }
+    const head = document.createElement('div');
+    head.className = "head";
+    head.appendChild(htmlSpan);
+    card.appendChild(head);
 
-    }
-};
+    const p = document.createElement('p');
+    p.className = "numb";
+    p.innerHTML = numberCard[rNum];
+    p.style.color = arrColors[rSimbol];
+    card.appendChild(p);
 
-const OrderNumbers = () => {
-    let newArrCards = arrCards.slice();
-    bubbleSort(newArrCards);
-    console.log(arrCards);
-    console.log(newArrCards);
-};
+     const spanDown = document.createElement('span');
+    spanDown.style.color = arrColors[rSimbol];
+    spanDown.innerHTML = arrSimbols[rSimbol];;
 
-const drawCard = (numero, simbolo, color) => {
-    let card = document.createElement("div");
-    card.classList.add("card");
-    card.classList.add("mt-3");
-    card.classList.add("ml-3");
-    if (numero == 1) {
-        As = "A";
-        card.innerHTML = `
-        <p id="simbolo" class="text-left mr-1 mt-2 ${color}">${simbolo}</p>
-        <h1 id="numero" class="text-center">${As}</h1>
-        <p id="icono" class="text-right mr-1 mb-2 ${color}">${simbolo}</p>
-`;
-    } else if (numero == 13) {
-        card.innerHTML = `
-        <p id="simbolo" class="text-left mr-1 mt-2 ${color}">${simbolo}</p>
-        <h1 id="numero" class="text-center"><img src="/src/img/king.png" alt=""></h1>
-        <p id="icono" class="text-right mr-1 mb-2 ${color}">${simbolo}</p>
-`;
-    } else if (numero == 12) {
-        card.innerHTML = `
-        <p id="simbolo" class="text-left mr-1 mt-2 ${color}">${simbolo}</p>
-        <h1 id="numero" class="text-center"><img src="/src/img/queen.png" alt=""></h1>
-        <p id="icono" class="text-right mr-1 mb-2 ${color}">${simbolo}</p>
-`;
-    } else if (numero == 11) {
-        card.innerHTML = `
-        <p id="simbolo" class="text-left mr-1 mt-2 ${color}">${simbolo}</p>
-        <h1 id="numero" class="text-center"><img src="/src/img/jack.png" alt=""></h1>
-        <p id="icono" class="text-right mr-1 mb-2 ${color}">${simbolo}</p>
-`;
-    } else {
-        card.innerHTML = `
-        <p id="simbolo" class="text-left mr-1 mt-2 ${color}">${simbolo}</p>
-        <h1 id="numero" class="text-center">${numero}</h1>
-        <p id="icono" class="text-right mr-1 mb-2 ${color}">${simbolo}</p>
-`;
-    }
+    const bottom = document.createElement('div');
+    bottom.className = "bottom";
+    bottom.appendChild(spanDown);
+    card.appendChild(bottom);
+
+    const finalCard = {
+        'pos': numberCard[rNum], 'card': card, 
+    };
+
+    arrCards.push(finalCard);
+
     return card;
-};
+}
+
+//funcion flecha de Draw
+const drawCards = () => {
+    arrCards = [];
+       const ButtonDraw = document.getElementById('Draw').value;
+       const divCard = document.getElementById('DrawCards');
+         
+       for (let i = 1; i <= ButtonDraw; i++) {
+           let carta = paintCard(i);
+           divCard.appendChild(carta);
+       }
+   };
+
+
+
+//ordenar cartas con metodo select
+const selectSort = () => {
+    let min = 0;
+    for(let i = 0; i < arrCards.length - 1; i++) {
+        for(let j = i+1; j < arrCards.length; j++) {
+            if(arrCards[j].pos < arrCards[i].pos) {
+                let tmp = arrCards[j];
+                arrCards[j] = arrCards[i];
+                arrCards[i] = tmp;
+                insertSort(min);
+                min++
+            }
+        }
+    }
+   
+}
+//funcion flecha del sort
+const insertSort = (set) => {
+    const ulSort = document.createElement('ul');
+    ulSort.className = 'sortingCards';
+
+    const liSort = document.createElement('li');
+    liSort.innerHTML = set;
+    ulSort.append(liSort);
+
+    for(let i = 0; i < arrCards.length; i++) {
+        const nCard = arrCards[i].card.cloneNode(true);
+        ulSort.appendChild(nCard);
+    }
+
+    const insertSort = document.getElementById('sortCards');
+    insertSort.appendChild(ulSort);
+}
