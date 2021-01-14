@@ -1,2 +1,2 @@
-# Sorting-Cards-with-Bubble-algorithm
+# Sorting-Cards-with-select-algorithm
 carta al azar con bubble algorithm
